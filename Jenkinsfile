@@ -1,22 +1,23 @@
 pipeline {
     agent any
+    
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                // تثبيت المكتبات
-                sh 'npm install'
+                // سحب الكود من GitHub
+                checkout scm
             }
         }
-        stage('Test') {
+        stage('Install Dependencies') {
             steps {
-                // تشغيل الاختبارات إذا كان لديك
-                sh 'npm test'
+                // تثبيت المكتبات (التي أصبحت الآن متاحة بفضل تثبيت Node.js)
+                sh 'npm install'
             }
         }
         stage('Build Docker Image') {
             steps {
-                // بناء الصورة
-                sh 'docker build -t social-app .'
+                // بناء صورة الـ Docker الخاصة بك
+                sh 'docker build -t social-app:latest .'
             }
         }
     }
