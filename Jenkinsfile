@@ -1,5 +1,5 @@
 pipeline {
-    agent any 
+    agent any
     
     stages {
         stage('Checkout') {
@@ -8,17 +8,14 @@ pipeline {
             }
         }
         stage('Install Dependencies') {
-            agent {
-                docker { image 'node:20-alpine' }
-            }
             steps {
+                // التأكد من أننا نستخدم node في المسار الصحيح
+                sh 'node -v'
                 sh 'npm install'
             }
         }
         stage('Build Docker Image') {
             steps {
-                // ملاحظة: هذا الأمر سيتم تنفيذه على الحاوية الرئيسية لأن الـ Docker 
-                // مربوط بـ /var/run/docker.sock
                 sh 'docker build -t social-app:latest .'
             }
         }
