@@ -9,17 +9,14 @@ pipeline {
         }
         stage('Install Dependencies') {
             steps {
-                // بدلاً من docker run، سنقوم بتثبيت المكتبات مباشرة
-                // سنستخدم npm الموجود في الحاوية إذا نجح، 
-                // أو سنقوم بتثبيته مرة واحدة فقط.
-                sh 'npm install'
+                // هذا الأمر سيقوم بتشغيل حاوية Node مؤقتة، 
+                // ويقوم بتثبيت المكتبات في مجلد المشروع الحالي
+                sh 'docker run --rm -v $(pwd):/app -w /app node:20-alpine npm install'
             }
         }
         stage('Build Docker Image') {
             steps {
-                // بما أننا ربطنا docker.sock، هذا الأمر سيعمل الآن 
-                // لأننا لا نحتاج لـ docker داخل docker، 
-                // بل سنستخدم Docker المضيف.
+                // هذا الأمر سيعمل الآن بفضل ربط الـ docker.sock
                 sh 'docker build -t social-app:latest .'
             }
         }
