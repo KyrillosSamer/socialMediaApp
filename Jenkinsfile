@@ -9,14 +9,17 @@ pipeline {
         }
         stage('Install Dependencies') {
             steps {
-                // تشغيل حاوية مؤقتة لتنفيذ npm install 
-                // هذا الأمر لا يحتاج Node.js مثبتاً داخل Jenkins
-                sh 'docker run --rm -v $PWD:/app -w /app node:20-alpine npm install'
+                // بدلاً من docker run، سنقوم بتثبيت المكتبات مباشرة
+                // سنستخدم npm الموجود في الحاوية إذا نجح، 
+                // أو سنقوم بتثبيته مرة واحدة فقط.
+                sh 'npm install'
             }
         }
         stage('Build Docker Image') {
             steps {
-                // بناء صورة الـ Docker الخاصة بك
+                // بما أننا ربطنا docker.sock، هذا الأمر سيعمل الآن 
+                // لأننا لا نحتاج لـ docker داخل docker، 
+                // بل سنستخدم Docker المضيف.
                 sh 'docker build -t social-app:latest .'
             }
         }
