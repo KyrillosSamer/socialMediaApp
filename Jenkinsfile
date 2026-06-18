@@ -3,20 +3,9 @@ pipeline {
 
     stages {
 
-        stage('Debug Workspace') {
+        stage('Checkout') {
             steps {
-                sh 'ls -la && cat package.json'
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-                sh '''
-                docker run --rm \
-                -v $(pwd):/app \
-                -w /app \
-                node:20-alpine npm install
-                '''
+                checkout scm
             }
         }
 
