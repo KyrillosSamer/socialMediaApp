@@ -3,9 +3,9 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        stage('Debug Workspace') {
             steps {
-                checkout scm
+                sh 'ls -la && cat package.json'
             }
         }
 
@@ -20,28 +20,9 @@ pipeline {
             }
         }
 
-        stage('Build TypeScript') {
+        stage('Build Image') {
             steps {
-                sh '''
-                docker run --rm \
-                -v $(pwd):/app \
-                -w /app \
-                node:20-alpine npm run build
-                '''
-            }
-        }
-
-        stage('Verify dist') {
-            steps {
-                sh 'ls -la dist || echo "No dist folder found"'
-            }
-        }
-
-        stage('Docker Build') {
-            steps {
-                sh '''
-                docker build -t social-app:${BUILD_NUMBER} .
-                '''
+                sh 'docker build -t social-app:${BUILD_NUMBER} .'
             }
         }
     }
