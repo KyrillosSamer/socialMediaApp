@@ -1,22 +1,24 @@
 pipeline {
-    agent any
+    agent any 
     
     stages {
         stage('Checkout') {
             steps {
-                // سحب الكود من GitHub
                 checkout scm
             }
         }
         stage('Install Dependencies') {
+            agent {
+                docker { image 'node:20-alpine' }
+            }
             steps {
-                // تثبيت المكتبات (التي أصبحت الآن متاحة بفضل تثبيت Node.js)
                 sh 'npm install'
             }
         }
         stage('Build Docker Image') {
             steps {
-                // بناء صورة الـ Docker الخاصة بك
+                // ملاحظة: هذا الأمر سيتم تنفيذه على الحاوية الرئيسية لأن الـ Docker 
+                // مربوط بـ /var/run/docker.sock
                 sh 'docker build -t social-app:latest .'
             }
         }
